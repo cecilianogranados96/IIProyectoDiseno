@@ -109,7 +109,6 @@
     })();
         
     var sql = new Base("base");
-            
     function provincia(provincias, sql1 = sql){
         var arreglo = $("#provincia").val(); 
         if ($("#provincia").val() != null){
@@ -130,7 +129,6 @@
         }
         actualizar();
     }
-           
     function canton(valcanton, sql1 = sql){
         var filtro = new Filtro(sql1, "canton", valcanton);
         $.post("distritos.php", {canton: valcanton}, function(result){
