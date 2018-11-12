@@ -43,8 +43,7 @@ class filtro extends WhereDecorator
 }
 
 $sql = new base("BASE");
-$sql = new filtro($sql,"F1","111");
-$sql = new filtro($sql,"F2","222");
+a
 echo $sql->getWere();
 ?>
 
