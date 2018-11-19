@@ -94,25 +94,33 @@
     var Base = function(base) {
         this.base = base;
     }
-    var where = '';
     var Filtro = function(user, tabla, id) {
         this.tabla = tabla;
         this.id = id;
-        where += this.tabla + this.id+ ",";
+        log.add( this.tabla + " = " + this.id+ " OR ");
     }
 
- 
+    var log = (function() {
+        var log = "";
+        return {
+            add: function(msg) { log += msg + ""; },
+            show: function() { return log; log = ""; }
+        }
+    })();
         
-   
+        
         
     var sql = new Base("base");
-   
+        
+        
+        
+        
         
     function provincia(provincias, sql1 = sql){
         var arreglo = $("#provincia").val(); 
         if ($("#provincia").val() != null){
             if (arreglo.length == 1) {
-                var filtro = new Filtro(sql1, "accidente.provincia =", provincias);
+                var filtro = new Filtro(sql1, "accidente.provincia", provincias);
                 $.post("cantones.php", {provincia: provincias}, function(result){
                     $("#cantones").removeAttr("disabled");
                     $("#distritos").removeAttr("disabled");
@@ -120,7 +128,7 @@
                 });
             }else{
                 arreglo.forEach(function(element) {
-                    var filtro = new Filtro(sql1, "accidente.provincia =", element);
+                    var filtro = new Filtro(sql1, "accidente.provincia", element);
                 });
                 $("#cantones").prop('disabled', 'disabled');
                 $("#distritos").prop('disabled', 'disabled');
@@ -128,35 +136,41 @@
         }
         actualizar();
     }
+        
+        
+        
+        
+        
     function canton(valcanton, sql1 = sql){
-        var filtro = new Filtro(sql1, "canton =", valcanton);
+        var filtro = new Filtro(sql1, "canton", valcanton);
         $.post("distritos.php", {canton: valcanton}, function(result){
             $("#distritos").html(result);
         });   
         actualizar();
     }
     function distrito(valdistrito, sql1 = sql){
-        var filtro = new Filtro(sql1, "distrito =", valdistrito);        
+        var filtro = new Filtro(sql1, "distrito", valdistrito);        
         actualizar();
     }
     function ano(valano, sql1 = sql){
         var valores = $("#ano").val();
         if (valores.length == 1) {
-            var filtro = new Filtro(sql1, "ano =", valano);
+            var filtro = new Filtro(sql1, "ano", valano);
         }else{
            valores.forEach(function(element) {
-               var filtro = new Filtro(sql1, "ano =", element);
+               var filtro = new Filtro(sql1, "ano", element);
             });
         }
         actualizar();
     }
+    
     function lesion(vallesion, sql1 = sql){
         var valores = $("#lesion").val();
             if (valores.length == 1) {
-                var filtro = new Filtro(sql1, "cod_lesion =", vallesion);
+                var filtro = new Filtro(sql1, "lesion", vallesion);
             }else{
                valores.forEach(function(element) {
-                   var filtro = new Filtro(sql1, "cod_lesion =", element);
+                   var filtro = new Filtro(sql1, "lesion", element);
                 });
             }
         
@@ -165,21 +179,24 @@
     function edad(valedad, sql1 = sql){
         var valores = $("#edad").val();
             if (valores.length == 1) {
-                var filtro = new Filtro(sql1, "edad ", valedad);
+                var filtro = new Filtro(sql1, "edad", valano);
             }else{
                valores.forEach(function(element) {
-                   var filtro = new Filtro(sql1, "edad ", element);
+                   var filtro = new Filtro(sql1, "edad", element);
                 });
             }
         actualizar();
-    }  
+    }
+        
     function sexo(valsexo, sql1 = sql){
-        var filtro = new Filtro(sql1, "cod_sexo =", valsexo);    
+        var filtro = new Filtro(sql1, "sexo", valsexo);    
         actualizar();
-    }      
-    function actualizar(){  
-    
-        var datos = $.post("consultar.php", {where: where}, function(result){
+    }
+        
+    function actualizar(){   
+        where = log.show().substr(0, (log.show().length)-4);
+        console.log(where);
+        var datos = $.post("consultar.php", {where: "where "+where}, function(result){
             console.log(result);
             datos_c =  JSON.parse(result);
             drawMarkersMap(datos_c);
@@ -193,9 +210,12 @@
      google.charts.setOnLoadCallback(drawMarkersMap);
       var inicial = [['City', 'Accidentes']];
       $.post("consultar.php", {where: ""}, function(result){
+            console.log(result);
             datos_c =  JSON.parse(result);
             drawMarkersMap(datos_c);
         });
+        
+        
       function drawMarkersMap(datos  = inicial) {
         var data = google.visualization.arrayToDataTable(datos);
         var options = {
