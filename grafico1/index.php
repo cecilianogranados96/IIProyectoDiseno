@@ -70,9 +70,10 @@
             <button title="None selected" type="button" class="text-left btn btn-default"><strong>EDAD:</strong> <br>
                 <select class="filter-me" id="edad" name="edad"  onchange="edad(this.value);" multiple> 
                     <option value="BETWEEN 0 and 4">0 a 4 años</option>
+                    <option value="BETWEEN 5 and 9">0 a 4 años</option>
                     <option value="BETWEEN 10 and 14">10 a 14 años</option>
                     <option value="BETWEEN 15 and 19">15 a 19 años</option>
-                    <option value="BETWEEN 20 and 20">20 a 24 años</option>
+                    <option value="BETWEEN 20 and 24">20 a 24 años</option>
                     <option value="BETWEEN 25 and 29">25 a 29 años</option>
                     <option value="BETWEEN 30 and 34">30 a 34 años</option>
                     <option value="BETWEEN 35 and 39">35 a 39 años</option>
