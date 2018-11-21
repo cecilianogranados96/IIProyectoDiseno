@@ -1,5 +1,5 @@
 <?php 
-include "../config.php";
+include "../../config.php";
 
 
 
@@ -15,7 +15,7 @@ if ($_POST['campo'] == "sexo")
 
 
  if ($_POST['campo'] == "distrito")
-    $consulta = "SELECT COUNT(*) as total, CONCAT(distrito.distrito) as campo  FROM `accidente`,distrito,canton,provincia Where accidente.ano = ".$_POST['ano']." and distrito.id_distrito = accidente.distrito  and canton.id_canton = accidente.canton and provincia.id_provincia = accidente.provincia GROUP by accidente.distrito  ORDER BY `total`  DESC LIMIT 10";
+    $consulta = "SELECT COUNT(*) as total, CONCAT(provincia.provincia, '->', canton.canton , '->', distrito.distrito) as campo  FROM `accidente`,distrito,canton,provincia Where accidente.ano = ".$_POST['ano']." and distrito.id_distrito = accidente.distrito  and canton.id_canton = accidente.canton and provincia.id_provincia = accidente.provincia GROUP by accidente.distrito  ORDER BY `total`  DESC LIMIT 10";
 
 
  if ($_POST['campo'] == "canton")
@@ -52,11 +52,8 @@ end campo,
 mysql_query("SET NAMES 'utf8'");
 $b = array(array($_POST['campo'],"Total"));
 $sth = mysqli_query($link,$consulta); 
-
-
-
 while($r = mysqli_fetch_assoc($sth)) {
-    array_push($b,array(utf8_encode($r['campo']), (int)$r['total']) );               
+    array_push($b,array(utf8_encode($r['campo']), (int)$r['total']));               
 }
 
 echo json_encode($b);

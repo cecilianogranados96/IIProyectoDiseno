@@ -1,5 +1,5 @@
 <?php 
-include "../config.php";
+include "../../config.php";
 $b = array(array("City","Accidentes"));
 $group_by = "";
 $campos = "";
